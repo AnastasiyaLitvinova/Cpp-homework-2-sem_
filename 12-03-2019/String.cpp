@@ -1,11 +1,11 @@
 #include<iostream>
-#include"String.h"
+#include"StringLibrary.h"
 
 using namespace std;
 using namespace ArrayExtension;
 
-bool searchForItems(int, int);
-int* separationArray(int*, int*, int, int&, predicate);
+bool SearchForItems(int, int);
+int* SeparationArray(int*, int*, int, int&, predicate);
 int* DeleteElements(int*, int, int&);
 
 int main()
@@ -31,11 +31,10 @@ int main()
 	randomArray(array, n);
 	displayArray(array, n);
 
-	int dim = 0;
-
 	int* newArray = allocateMemory(n);
 	int* Array = allocateMemory(n);
-
+	
+	int dim = 0;
 	Array = separationArray(array, newArray, n, dim, searchForItems);
 	if (dim > 0)
 	{
@@ -58,7 +57,7 @@ int main()
 	cout << "Sorted array in descending number of characters (A, B, C, D, E, F) in hexadecimal notation, without duplicate elements." << endl;
 	displayArray(Array1, rasm - 1);
 
-	system("Pause");
+	system("pause");
 
 	return 0;
 }
