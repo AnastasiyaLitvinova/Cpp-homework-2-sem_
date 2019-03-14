@@ -1,7 +1,6 @@
 #include <iostream>
 #include"Matrix.h"
 #include <cmath>
-
 using namespace std;
 
 double redictionFormule(double term)
@@ -39,9 +38,14 @@ double redictionFormule(double term)
 		for (int j = 0; j < cols; ++j)
 		{
 			if (j == i)
+			{
 				matrix[i][j] = j;
+			}
 
-			else matrix[i][j] = (sinTaylor(redictionFormule(i*j), accur) + i + 1) / pow(1 + j, 3);
+			else
+			{
+				matrix[i][j] = (sinTaylor(redictionFormule(i*j), accur) + i + 1) / pow(1 + j, 3);
+			}
 		}
 
 	}
@@ -54,10 +58,14 @@ double redictionFormule(double term)
 		for (int j = 0; j < cols; ++j)
 		{
 			if (j != i)
+			{
 				matrix[i][j] =i - j;
+			}
 
 			else matrix[i][j] = ((i + j - 1) + pow(M_E,( i + j)) / (sin(redictionFormule(2 * i + 2 * j)) + 1);
-				(sin(redictionFormule(i*j)) + i + 1) / pow(1 + j, 3);
+					     {
+						     (sin(redictionFormule(i*j)) + i + 1) / pow(1 + j, 3);
+					     }
 		}
 	}
 }
@@ -69,7 +77,9 @@ double redictionFormule(double term)
 		for (int j = 0; j < cols; ++j)
 		{
 			if (fabs(taylorMatrix[i][j] - libraryMatrix[i][j]) > acc)
+			{
 				return false;
+			}
 		}
 	}
 
