@@ -7,6 +7,8 @@ Lw2 https://github.com/AnastasiyaLitvinova/Cpp-homework-2-sem_/tree/master/20-03
 
 LW3 https://github.com/AnastasiyaLitvinova/Cpp-homework-2-sem_/tree/master/26-03-2019
 
+LW4 https://github.com/AnastasiyaLitvinova/Cpp-homework-2-sem_/tree/master/02-04-2019
+
 
 IndividualWork1 https://github.com/AnastasiyaLitvinova/Cpp-homework-1-sem/tree/master/05-03-2019
 
