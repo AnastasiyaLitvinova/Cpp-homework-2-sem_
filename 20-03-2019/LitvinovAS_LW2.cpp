@@ -1,14 +1,9 @@
-/*
-Ïî ìàêñèìàëüíîìó ýëåìåíòó
-Åñëè ÷åòíîå ÷èñëî ñòðîê - áàáë ñîðò, íå÷åòíîå - êâèê ñîðò
-*/
-
-
 #include <iostream>
 #include<algorithm>
 
 using namespace std;
 
+void swap(int& a, int& b);
 void swap(int*& a, int*& b);
 int getMax(int* arr, int size);
 void bubbleSort(int** arr, int n, int m);
@@ -20,6 +15,8 @@ void display(int** matrix, int n, int m);
 int* getArr(int* arr, int size);
 void setMatrix(int**& matrix, int**& mtrx);
 void arrsort(int** matrix, int n, int m);
+int partition(int arr[], int low, int high);
+void quickSort(int arr[], int low, int high);
 
 int main()
 {
@@ -28,11 +25,15 @@ int main()
 	cin >> n >> m;
 	int** matrix = getMatrix(n, m);
 	setElemenets(matrix, n, m);
+	cout << std::endl << endl << endl;
 	display(matrix, n, m);
 	cout << endl;
 	arrsort(matrix, n, m);
 	cout << endl;
 	freeMemory(matrix, n);
+
+	system("pause");
+	return 0;
 }
 
 void swap(int*& a, int*& b)
@@ -59,7 +60,7 @@ void bubbleSort(int** arr, int n, int m)
 	for (int i = 0; i < n; ++i) {
 		for (int j = 0; j < n - i - 1; ++j)
 		{
-			if (getMax(arr[j], m) > getMax(arr[j + 1], m)) 
+			if (getMax(arr[j], m) > getMax(arr[j + 1], m))
 			{
 				swap(arr[j], arr[j + 1]);
 			}
@@ -122,7 +123,7 @@ void display(int** matrix, int n, int m)
 int* getArr(int* arr, int size)
 {
 	int* a = new int[size];
-	for (int i = 0; i < size; ++i) 
+	for (int i = 0; i < size; ++i)
 	{
 		a[i] = arr[i];
 	}
@@ -137,28 +138,30 @@ void setMatrix(int**& matrix, int**& mtrx)
 
 void arrsort(int** matrix, int n, int m)
 {
-	if (n % 2 == 0) 
+	if (n % 2 == 0)
 	{
 		bubbleSort(matrix, n, m);
 		display(matrix, n, m);
 	}
-	else 
+	else
 	{
-		vector<int> vect(n);
+		int* VECTOR = new int[n];
+		
 		for (int i = 0; i < n; ++i)
 		{
 			int term = getMax(matrix[i], m);
-			vect[i] = term;
+			VECTOR[i] = term;
 		}
-		sort(vect.begin(), vect.end());
+
+		quickSort(VECTOR, 0, n - 1);
 
 		int** mtrx = new int*[n];
-		for (int i = 0; i < n; ++i) 
+		for (int i = 0; i < n; ++i)
 		{
 			mtrx[i] = new int[m];
-			for (int j = 0; j < n; ++j) 
+			for (int j = 0; j < n; ++j)
 			{
-				if (getMax(matrix[j], m) == vect[i])
+				if (getMax(matrix[j], m) == VECTOR[i])
 					for (int q = 0; q < m; ++q)
 					{
 						mtrx[i][q] = matrix[j][q];
@@ -166,8 +169,44 @@ void arrsort(int** matrix, int n, int m)
 			}
 		}
 
+		delete[] VECTOR;
 		display(mtrx, n, m);
 
-		freeMemory(mtrx, n);`
+		freeMemory(mtrx, n); 
 	}
+}
+
+int partition(int arr[], int low, int high)
+{
+	int pivot = arr[high];     
+	int i = (low - 1); 
+
+	for (int j = low; j <= high - 1; j++)
+	{
+		if (arr[j] <= pivot)
+		{
+			i++;   
+			swap(arr[i], arr[j]);
+		}
+	}
+	swap(arr[i + 1], arr[high]);
+	return (i + 1);
+}
+
+void quickSort(int arr[], int low, int high)
+{
+	if (low < high)
+	{
+		int pi = partition(arr, low, high);
+
+		quickSort(arr, low, pi - 1);
+		quickSort(arr, pi + 1, high);
+	}
+}
+
+void swap(int& a, int& b) 
+{
+	int t = a;
+	a = b;
+	b = t;
 }
