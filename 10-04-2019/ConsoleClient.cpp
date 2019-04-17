@@ -1,9 +1,5 @@
 #include <iostream>
-#include <iostream>
-#include <iomanip>
-#include <Windows.h>
 #include "ComplexNumber.h";
-#include <vector>
 
 using namespace std;
 const int N = 20; 
@@ -17,8 +13,8 @@ int main()
 	SetConsoleOutputCP(1251); 
 	SetConsoleCP(1251);
 	char File[N] = "WorkFile1.txt"; 
-	int n; // размерность вектора  
-	cout << "Введите размерность вектора из комплексных координат: "; 
+	int n;   
+	cout << "Г‚ГўГҐГ¤ГЁГІГҐ Г°Г Г§Г¬ГҐГ°Г­Г®Г±ГІГј ГўГҐГЄГІГ®Г°Г  ГЁГ§ ГЄГ®Г¬ГЇГ«ГҐГЄГ±Г­Г»Гµ ГЄГ®Г®Г°Г¤ГЁГ­Г ГІ: "; 
 	cin >> n;
 	ComplexNumber* cn = new ComplexNumber[n];
 	for (int i = 0; i < n; ++i) {
@@ -65,7 +61,7 @@ void InizializeComplexVector(vector<ComplexNumber>& myVect1, vector<ComplexNumbe
 
 	if (!streamIn.is_open())
 	{
-		cout << "Нельзя открыть файл для чтения!" << endl;
+		cout << "ГЌГҐГ«ГјГ§Гї Г®ГІГЄГ°Г»ГІГј ГґГ Г©Г« Г¤Г«Гї Г·ГІГҐГ­ГЁГї!" << endl;
 		system("pause");
 		exit(1);
 	}
