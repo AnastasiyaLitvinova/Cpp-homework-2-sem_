@@ -1,5 +1,0 @@
-4 18 33 7 -63 -27 -747
- Sorted array:
--63 -747
- Without elements with corresponding amount of zeroes and ones:
--27 7 18
