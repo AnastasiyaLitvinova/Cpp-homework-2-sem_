@@ -1,138 +1,185 @@
-// дана англо яз строка , нужно в этом тексте зашифровать все слова заданной длины
-// по правилу буква соответсвует какому-нибудь числу в круглых скобках , знаки препиная не кодировать
-// чтобы можно будет потом изменить правила шифрования
+// Г¤Г Г­Г  Г Г­ГЈГ«Г® ГїГ§ Г±ГІГ°Г®ГЄГ  , Г­ГіГ¦Г­Г® Гў ГЅГІГ®Г¬ ГІГҐГЄГ±ГІГҐ Г§Г ГёГЁГґГ°Г®ГўГ ГІГј ГўГ±ГҐ Г±Г«Г®ГўГ  Г§Г Г¤Г Г­Г­Г®Г© Г¤Г«ГЁГ­Г»
+// ГЇГ® ГЇГ°Г ГўГЁГ«Гі ГЎГіГЄГўГ  Г±Г®Г®ГІГўГҐГІГ±ГўГіГҐГІ ГЄГ ГЄГ®Г¬Гі-Г­ГЁГЎГіГ¤Гј Г·ГЁГ±Г«Гі Гў ГЄГ°ГіГЈГ«Г»Гµ Г±ГЄГ®ГЎГЄГ Гµ , Г§Г­Г ГЄГЁ ГЇГ°ГҐГЇГЁГ­Г Гї Г­ГҐ ГЄГ®Г¤ГЁГ°Г®ГўГ ГІГј
+// Г·ГІГ®ГЎГ» Г¬Г®Г¦Г­Г® ГЎГіГ¤ГҐГІ ГЇГ®ГІГ®Г¬ ГЁГ§Г¬ГҐГ­ГЁГІГј ГЇГ°Г ГўГЁГ«Г  ГёГЁГґГ°Г®ГўГ Г­ГЁГї
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
-using namespace std;
+#include <string>
 
-int length(char* arr);
-char* getArray();
-int getLength(int length);
-bool symbolCheck(char a);
-bool isTrueLen(char* string, int index, int length, int size);
-void solve(char*& string, int leng, int size);
+typedef char*(*Key)(int);
+typedef char*(*Rule)(char*, Key, int);
+
+const int N = 256;
+
+int ValidationOfElement(int n);
+char* ValidationOfArray(char* array, int n);
+char* AllocateMemoryChar(int n);
+void ToEncode(char*, Rule, int, Key);
+char* GetRule(char*, Key, int);
+char RegisterIndependent(char);
+void ToReplaceWord(char* string, char* replacingWord, char* word, int);
+char* ConvertToChar(int);
+
+using namespace std;
 
 int main()
 {
+	char* string = AllocateMemoryChar(N);
+	cout << "Please, enter string: " << endl;
+	cin.getline(string, N);
+
 	int n;
-	cout << "Enter size word n:" << endl;
+	cout << "Please enter of what length word you want to encode:" << endl;
 	cin >> n;
 
-	char* string = getArray();
-	cout<< string<< endl;
-	solve(string, n, length(string));
-	cout<< endl;
-	delete[] string;
+	try
+	{
+		n = ValidationOfElement(n);
+	}
+	catch (const exception& ex)
+	{
+		cout << ex.what() << endl;
+	}
+
+	cout << "The encodinig string is" << endl;
+	ToEncode(string, GetRule, n, ConvertToChar);
+	cout << string;
+
 	system("pause");
 	return 0;
-
 }
 
-int length(char* arr)
+int ValidationOfElement(int n)
 {
-	int index = 0;
-	while (arr[index])
+	if (n <= 0)
 	{
-		index++;
-	}
-	return index;
-}
-
-char* getArray()
-{
-	cout << "Enter array:" << endl;
-	char* len = new char[256];
-	cin.getline(len, 256);
-
-	char* string = new char[length(len)];
-	for (int i = 0; i < length(string); ++i)
-	{
-		string[i] = len[i];
-	}
-
-	delete[] len;
-	return string;
-
-}
-
-int getLength(int length)
-{
-	cout << "Enter name: " << endl;
-	int n;
-	while (true)
-	{
-		cin >> n;
-		if (n < length && n > 0)
-		{
-			return n;
-		}
-
-		cout << "Invalid data, repeat" << endl;
-	}
-}
-
-bool symbolCheck(char a) 
-{
-	if (a >= 65 && a <= 90 || a >= 97 && a <= 122)
-	{
-		return true;
+		throw invalid_argument("The count of elements of array can't be less or equal to 0");
 	}
 	else
 	{
-		return false;
+		return n;
 	}
 }
 
-bool isTrueLen(char* string, int index, int length, int size) 
+char* ValidationOfArray(char* array, int n)
 {
-	if (size - index < length)
-		return false;
-	int len = 1;
-	while (symbolCheck(string[index + len]))
+	try
 	{
-		++len;
+		n = ValidationOfElement(n);
 	}
-	if (len == length)
+	catch (const exception& ex)
 	{
-		return true;
+		cout << ex.what() << endl;
 	}
-	return false;
+
+	if (array == nullptr)
+	{
+		throw invalid_argument("The pointer to array can't be equal to nullptr");
+	}
+
+	return array;
 }
 
-void solve(char*& string, int leng, int size) 
+char* AllocateMemoryChar(int n)
 {
-	for (int i = 0; i < size; ++i)
+	char* array = new char[n];
+
+	try
 	{
-		if (symbolCheck(string[i]))
+		array = ValidationOfArray(array, n);
+	}
+	catch (const exception& ex)
+	{
+		cout << ex.what() << endl;
+	}
+
+	return array;
+}
+
+void ToEncode(char* string, Rule rule, int n, Key key)
+{
+	const char* symbols = "ABCDEFGHIJKLMNOPQRSTUWVXYZabcdefghijklnmopqrstuwvxyz";
+	char* pword = strpbrk(string, symbols);
+
+	while (pword)
+	{
+		int length = strspn(pword, symbols);
+
+		if (length == n)
 		{
-			if (isTrueLen(string, i, leng, size))
-			{
-				int newSize = length(string) + leng * 2;
+			ToReplaceWord(string, pword, rule(pword, key, n), n);
+		}
 
-				char* substring = new char[newSize];
-				for (int j = 0; j < newSize; ++j)
-				{
-					if (j < i)
-					{
-						substring[j] = string[j];
-					}
-					if (j == i) 
-					{
-						for (int q = 0; q < leng * 3; ++q)
-						{
-							if (q % 3 == 0 || q == 0)
-							{
-								substring[q] = '(';
-							}
-							if (q % 3 == 1) {
-								substring[i] = 5;
-							}
-						}
-					}
-				}
+		pword += length;
+		pword = strpbrk(pword, symbols);
+
+	}
+
+}
+
+char* GetRule(char* word, Key key, int n)
+{
+	const char* symbols = "zyxvwutsrqpomnlkjihgfedcba";
+	char* encodingWord = new char[n * 4];
+
+	int k = 0;
+
+	for (int j = 0; j < n; j++)
+	{
+		word[j] = RegisterIndependent(word[j]);
+
+		for (int i = 0; i < strlen(symbols); i++)
+		{
+			if (word[j] == symbols[i])
+			{
+				strcpy(encodingWord + k, key(i + 1));
+				k += 4;
 			}
 		}
 	}
+
+	return encodingWord;
 }
 
+char RegisterIndependent(char symbol)
+{
+	return (symbol < 'a') ? symbol + 32 : symbol;
+}
+
+void ToReplaceWord(char* string, char* replacingWord, char* word, int length)
+{
+	char* copyString = AllocateMemoryChar(N);
+
+	strcpy(copyString, replacingWord + length);
+	strcpy(replacingWord, word);
+	strcpy(strstr(string, word) + length * 4, copyString);
+}
+
+char* ConvertToChar(int number)
+{
+	char* code = new char[5];
+	int i = 3;
 
 
+	code[i] = ']';
+	if (number < 10)
+	{
+		i--;
+		code[i] = number % 10 + '0';
+		code[i - 1] = '0';
+
+	}
+	else
+	{
+		while (number)
+		{
+			i--;
+			code[i] = number % 10 + '0';
+			number /= 10;
+
+		}
+
+	}
+
+	code[0] = '[';
+	return code;
+}
