@@ -1,0 +1,7 @@
+Source string:
+hello Nastya
+
+Please enter of what length word you want to encode:
+6
+The encodinig string is
+[14][26][08][07][02][26]
